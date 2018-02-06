@@ -1,0 +1,127 @@
+\documentclass{article}
+
+\begin{document}
+
+
+Our GitHub Repository
+
+https://github.com/sabinakou/158francissabina
+
+Our data set:
+
+https://archive.ics.uci.edu/ml/datasets/Automobile
+
+26 variables:
+
+\begin{enumerate}
+
+\item Symboling: the process in which cars are assigned a risk factor associated with price
+
+\item Normalized-losses: continuous from 65 to 256
+
+\item Make: alfa-romero, audi, bmw, chevrolet, dodge, honda, isuzu, jaguar, mazda, mercedes-benz, mercury, mitsubishi, nissan, peugot, plymouth, porsche, renault, saab, subaru, toyota, volkswagen, volvo, diesel, gas
+
+\item Fuel-type: diesel, gas
+
+\item Aspiration: std, turbo
+
+\item Num-of-doors: four, two 
+
+\item Body-style: hardtop, wagon, sedan, hatchback, convertible
+
+\item Drive-wheels: 4wd, fwd, rwd
+
+\item Engine-location: front, rear
+
+\item Wheel-base: continuous from 86.6 120.9
+
+\item Length: continuous from 141.1 to 208.1
+
+\item Width: continuous from 60.3 to 72.3
+
+\item Height: continuous from 47.8 to 59.8
+
+\item Curb-weight: weight of the car without any people or baggage, continuous from 1488 to 4066
+
+\item Engine-type: dohc, dohcv, l, ohc, ohcf, ohcv, rotor
+
+\item Num-of-cylinders: number of cylinders, eight, five, four, six, three, twelve, two
+
+\item Engine-size: continuous from 61 to 326
+
+\item Fuel-system: types of fuel injections or carburetors, 1bbl, 2bbl, 4bbl, idi, mfi, mpfi, spdi, spfi
+
+\item Bore: the diameter of the cylinder that the piston travels in, continuous from 2.54 to 3.94
+
+\item Stroke: a part of the piston's cycle, continuous from 2.07 to 4.17 
+
+\item Compression-ratio: the ratio of the volume of the cylinder and the combustion chamber when the piston is at the bottom, and the volume of the combustion chamber when the piston is at the top, continuous from 7 to 23
+
+\item Horsepower: continuous from 48 to 288
+
+\item Peak-rpm: peak revolutions per minute, continuous from 4150 to 6600
+
+\item City-mpg: continuous from 13 to 49
+
+\item Highway-mpg: continuous from 16 to 54
+
+\item Price: continuous from 5118 to 45400
+
+\end{enumerate}
+
+The observational units in this data set are the cars. 
+
+<<>>=
+
+imports_85 <- read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data", header=FALSE, na.strings="?")
+
+names(imports_85) <- c("Symboling", "Normalized-Losses","Make","Fuel_Type","Aspiration","Num-of-doors","Body-style","Drive-wheels","Engine-location","Wheel-base","Length","Width","Height","Curb-weight","Engine-type","Num-of-cylinders","Engine-size","Fuel-system","Bore","Stroke","Compression-ratio","Horsepower","Peak-rpm","City-mpg" , "Highway-mpg","Price")
+
+library(broom)
+
+
+install.packages("ggplot2")
+require(ggplot2)
+
+tidy(imports_85)
+
+Symboling <- imports_85[,1]
+
+NormalizedLosses <- imports_85[,2]
+
+FuelType <- imports_85[,4]
+
+NumCly <- imports_85[,16]
+
+CarsMake <- imports_85[,3]
+
+Price <- imports_85[,26]
+
+EngineSize <- imports_85[,17]
+
+Weight <- imports_85[,14]
+
+ggplot(imports_85, aes(x = CarsMake, y = Price)) +
+geom_point() +
+labs(x = "Make of Car", y = "Price of Car",
+title = "Relationship between make and price") +
+geom_smooth(method = "lm", se = FALSE)
+
+ggplot(imports_85, aes(x = EngineSize, y = Weight)) +
+geom_point() +
+labs(x = "Engine Size", y = "Weight",
+title = "Relationship between engine size and weight") +
+geom_smooth(method = "lm", se = FALSE)
+
+
+ggplot(imports_85, aes(x = Price, y = NormalizedLosses)) +
+geom_point() +
+labs(x = "Price", y = "NormalizedLosses",
+title = "Relationship between Price and Normalized Losses") +
+geom_smooth(method = "lm", se = FALSE)
+@
+
+The graph of Relationship between engine size and weight makes sense because as the engine size gets larger, the weight of the car gets larger simply due to the fact that the engine is heavier. 
+
+
+\end{document}
