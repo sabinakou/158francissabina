@@ -1,4 +1,7 @@
 \documentclass{article}
+\usepackage{url}
+\usepackage{fullpage}
+\usepackage{graphicx}
 
 \begin{document}
 
@@ -8,7 +11,9 @@
 
 \maketitle
 
+\begin{center}
 Github Repository: https://github.com/sabinakou/158francissabina
+\end{center}
 
 <<global_options, include=FALSE>>=
 knitr::opts_chunk$set(message=FALSE, warning=FALSE, fig.height=3, fig.width=5, fig.align = "center")
@@ -27,7 +32,16 @@ assign("last.warning", NULL, envir = baseenv())
 
 names(imports_85) <- c("Symboling", "Normalized-Losses","Make","Fuel_Type","Aspiration","Num-of-doors","Body-style","Drive-wheels","Engine-location","Wheel-base","Length","Width","Height","Curb-weight","Engine-type","Num-of-cylinders","Engine-size","Fuel-system","Bore","Stroke","Compression-ratio","Horsepower","Peak-rpm","City-mpg" , "Highway-mpg","Price")
 
+
+
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, fig.height=3, fig.width=5, fig.align = "center")
+library(dplyr)
+library(ggplot2)
+library(infer)
+library(skimr)
 library(broom)
+library(readr)
+options(digits=3)
 
 install.packages("ggplot2")
 require(ggplot2)
@@ -91,5 +105,96 @@ Price <- imports_85[,26]
 \end{center}
 
 In this data set, we are analyzing the features of cars and how those variables affect the price of the cars specifically listed in our data set. With a wide range of variables in this data set, and data from the 1985 Model Import Car and Truck Specification, we can start to explore the relationships between price and car features. The data was retrieved from: $https://archive.ics.uci.edu/ml/machine-learning-databases/autos/$ . We acknowledge that this data does not represent all cars but it does represent a list of imported cars in the United States, so this information can  be carefully extrapolated to represent more cars. Correlations between price and feature should not differ too much between imported cars and non-imported cars. 
+
+\begin{center}
+\bf{Model}
+\end{center}
+
+$$ Y_i = \beta_0 + \beta_1X_{i1} + \beta_2 X_{i2} + \beta_3 X_{i3} + \beta_4 X_{i4} + \epsilon_i$$
+
+Reponse Variable = Price
+
+$\beta_1 $ = Length
+
+$\beta_2 $ = Width
+
+$\beta_3 $ = Height
+
+$\beta_4 $ = Engine Size
+
+<<echo=FALSE>>=
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor=1, ...)
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    text(0.5, 0.5, txt, cex = cex.cor )
+}
+@
+
+<<echo=FALSE>>=
+pairs(cbind(Length, Width, Height, EngineSize), lower.panel=panel.cor, pch=18)
+@
+Certain explanatory variables are highly correlated including length and width, length and engine size, engine size and width, and length and height. Height and engine size, however, have very little correlation. There is also reason to do transformations as to somewhat keep all the explanatory variables in a similar range--i.e. the range for engine size is completely different than the range for length and width. Despite the high correlation between length and width, interaction terms do not seem to be too necessary here--there are a number of case where length and width do no work hand in hand, and the inclusion of all four variables seperately helps with the usefullness of the model. This is true because each variables uniquely presents data with already a degree of relative parsimony. 
+
+<<echo=FALSE>>=
+imports_85.lm <- lm(Price~ Length + Width + Height + EngineSize, data=imports_85)
+
+ggplot(imports_85.lm, aes(x = Length + Width + Height + EngineSize, y = log(Price))) +
+geom_point() +
+labs(x = "Length, Width, Height, Engine Size", y = "Price",
+title = "Price vs. Length, Width, Height, and Engine Size") +
+geom_smooth(method = "lm", se = FALSE, color="red"
+            )
+
+tidy(imports_85.lm)
+@
+None of our beta coefficients are significant. 
+
+<<echo=FALSE>>=
+anova(imports_85.lm)
+
+imports_85.dm <- lm(Price~ Length + EngineSize, data=imports_85)
+
+anova(imports_85.dm)
+@
+Using these anova tables, it would be advisable to use the model with all four explanatory variables, as the sum of squares for the simpler model is larger and there is a significant amount of information lost with the simpler mode--with only a slight gain in parsimony. 
+
+<<echo=FALSE>>=
+#R-Squared
+
+summary(imports_85.lm)$r.squared
+
+#Adjusted R-Squared
+
+summary(imports_85.lm)$adj.r.squared
+@
+The Adjusted R-Squared value of 0.785 and the R-Squared value of 0.789 indicates high correlation and an indication that the model accurately describes the population, but it is no guarentee. The model is definitely going in the right direction. 
+
+<<echo=FALSE>>=
+
+imports_85.lm <- lm(Price~ Length + Width + Height + EngineSize, data=imports_85)
+
+imports_85.str <- rstandard(imports_85.lm)
+imports_85.fit <- fitted(imports_85.lm)
+plot(imports_85.fit, imports_85.str)
+abline(0,0)
+
+@
+This residual plot reaffirms the need for the log transformation, as there is an imbalance in the error variation. 
+<<echo=FALSE>>=
+library(MASS)
+fit <- imports_85.lm
+step <- stepAIC(fit, direction="both")
+@
+Using this backwards and forwards selection process, we can conclude that the model with four variables is the best. This model had the smallest AIC (3434) and the smallest Sum of Squares. So, in all, we have continuously used the four explanatory variables from earlier: length, weight, height, and engine size.
+Our model has basicaally said that we have four, discrete variables that are important in their own right when describing our data. All four variables have stood up to our tests because they do not severely hurt the parsimony of our model. Even though a number of our variables are highly correlated, the previous variable selection process shows that the four variable model is the best. 
+
+
+
+
+
 
 \end{document}
