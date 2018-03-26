@@ -10,7 +10,8 @@ Our data set:
 
 https://archive.ics.uci.edu/ml/datasets/Automobile
 
-26 variables:
+
+
 
 \begin{enumerate}
 
@@ -70,20 +71,20 @@ https://archive.ics.uci.edu/ml/datasets/Automobile
 
 The observational units in this data set are the cars. 
 
-<<>>=
+<<echo=FALSE>>=
+options(warn=-1)
 
-imports_85 <- read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data", header=TRUE, na.strings="?")
+imports_85 <- read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data", header=FALSE, na.strings="?")
 
-names(imports_85) <- c("Symboling", "Normalized-Losses","Make","Fuel_Type","Aspiration","Num-of-doors","Body-style","Drive-wheels","Engine-location","Wheel-base","Length","Width","Height","Curb-weight","Engine-type","Num-of-cylinders","Engine-size","Fuel-system","Bore","Stroke","Compression-ratio","Horsepower","Peak-rpm","City-mpg", "Highway-mpg","Price")
+assign("last.warning", NULL, envir = baseenv())
 
-
+names(imports_85) <- c("Symboling", "Normalized-Losses","Make","Fuel_Type","Aspiration","Num-of-doors","Body-style","Drive-wheels","Engine-location","Wheel-base","Length","Width","Height","Curb-weight","Engine-type","Num-of-cylinders","Engine-size","Fuel-system","Bore","Stroke","Compression-ratio","Horsepower","Peak-rpm","City-mpg" , "Highway-mpg","Price")
 
 library(broom)
-library(ggplot2)
-
-tidy(imports_85)
 
 
+install.packages("ggplot2")
+require(ggplot2)
 
 tidy(imports_85)
 
@@ -91,40 +92,92 @@ Symboling <- imports_85[,1]
 
 NormalizedLosses <- imports_85[,2]
 
-FuelType <- imports_85[,4]
-
-NumCly <- imports_85[,16]
-
 CarsMake <- imports_85[,3]
 
-Price <- imports_85[,26]
+FuelType <- imports_85[,4]
 
-EngineSize <- imports_85[,17]
+Aspiration <- imports_85[,5]
+
+NumDoors <- imports_85[,6]
+
+BodyStyle <- imports_85[,7]
+
+DriveWheels <- imports_85[,8]
+
+EngineLoc <- imports_85[,9]
+
+WheelBase <- imports_85[,10]
+
+Length <- imports_85[,11]
+
+Width <- imports_85[,12]
+
+Height <- imports_85[,13]
 
 Weight <- imports_85[,14]
 
-factor(Price)
-Price <- as.numeric(as.character(Price))
+EngineType <- imports_85[,15]
+
+NumCly <- imports_85[,16]
+
+EngineSize <- imports_85[,17]
+
+FuelSystem <- imports_85[,18]
+
+Bore <- imports_85[,19]
+
+Stroke <- imports_85[,20]
+
+CompressionRatio <- imports_85[,21]
+
+Horsepower <- imports_85[,22]
+
+PeakRpm <- imports_85[,23]
+
+CityMpg <- imports_85[,24]
+
+HighwayMpg <- imports_85[,25]
+
+Price <- imports_85[,26]
 
 
 
-ggplot(imports_85, aes(x = EngineSize, y = Weight)) +
+
+
+ggplot(imports_85, aes(x = imports_85[,14], y = imports_85[,26])) +
 geom_point() +
-labs(x = "Engine Size", y = "Weight",
-title = "Relationship between Engine size and Weight") +
+labs(x = "Curb Weight", y = "Price of Car",
+title = "Relationship between Curb Weight and price") +
 geom_smooth(method = "lm", se = FALSE)
-
-ggplot(imports_85, aes(x = Price, y = Make)) +
+@
+Evidently there's a large correlation between the curb weight of a car and its price. The data points with large residuals towards the higher end in curb weight indicate that the incredibly heavy cars tend to, not surprisingly, cost significantly more.
+<<>>=
+ggplot(imports_85, aes(x = imports_85[,13], imports_85[,26])) +
 geom_point() +
-labs(x = "Price", y = "Weight",
-title = "Relationship between Price and Weight") +
+labs(x = "Length", y = "Price of Car",
+title = "Relationship between Length and price") +
 geom_smooth(method = "lm", se = FALSE)
-
 
 
 @
+The correlation between length and price isn't as strongly positive as that of curb weight and price but it still exists. There are a number of incredibly expensive cars that are not long however. This relationship between length and price is relatively weak. 
+<<>>=
+ggplot(imports_85, aes(x = imports_85[,17], y = imports_85[,14])) +
+geom_point() +
+labs(x = "Engine Size", y = "Weight",
+title = "Relationship between engine size and weight") +
+geom_smooth(method = "lm", se = FALSE)
+@
+In perhapps the most intuitive of all relationships, we see a clear positive correlation between engine size and weight. The larger the engine, the heavier the car--most likely. 
+<<>>=
+ggplot(imports_85, aes(x = imports_85[,26], y = imports_85[,2])) +
+geom_point() +
+labs(x = "Price", y = "NormalizedLosses",
+title = "Relationship between Price and Normalized Losses") +
+geom_smooth(method = "lm", se = FALSE)
+@
 
-The relationship of Engine Size and Weight was a nice confirmation that my intuition works. The larger the Engine, the likelier that the Weight of the Car would be higher.
+In all, this data set has not presented anything particularly suprising. So far, all the relationships we've put together come accross as incredibly intuitive--our sample seems representitive of the the overall population of automobiles. 
 
 
 \end{document}
