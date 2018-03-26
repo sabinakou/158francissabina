@@ -90,4 +90,4 @@ Price <- imports_85[,26]
 \bf{Introduction}
 \end{center}
 
-\end{document}
+In this data set, we are analyzing the features of cars and the subsequent 
