@@ -1,0 +1,93 @@
+\documentclass{article}
+
+\begin{document}
+
+\title{Multiple Linear Regression Project}
+
+\author{Sabina Kou and Francis Northwood}
+
+\maketitle
+
+Github Repository: https://github.com/sabinakou/158francissabina
+
+<<global_options, include=FALSE>>=
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, fig.height=3, fig.width=5, fig.align = "center")
+library(dplyr)
+library(ggplot2)
+library(infer)
+library(skimr)
+library(broom)
+options(digits=3)
+
+imports_85 <- read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data", header=FALSE, na.strings="?")
+
+options(warn=-1)
+
+assign("last.warning", NULL, envir = baseenv())
+
+names(imports_85) <- c("Symboling", "Normalized-Losses","Make","Fuel_Type","Aspiration","Num-of-doors","Body-style","Drive-wheels","Engine-location","Wheel-base","Length","Width","Height","Curb-weight","Engine-type","Num-of-cylinders","Engine-size","Fuel-system","Bore","Stroke","Compression-ratio","Horsepower","Peak-rpm","City-mpg" , "Highway-mpg","Price")
+
+library(broom)
+
+install.packages("ggplot2")
+require(ggplot2)
+
+Symboling <- imports_85[,1]
+
+NormalizedLosses <- imports_85[,2]
+
+CarsMake <- imports_85[,3]
+
+FuelType <- imports_85[,4]
+
+Aspiration <- imports_85[,5]
+
+NumDoors <- imports_85[,6]
+
+BodyStyle <- imports_85[,7]
+
+DriveWheels <- imports_85[,8]
+
+EngineLoc <- imports_85[,9]
+
+WheelBase <- imports_85[,10]
+
+Length <- imports_85[,11]
+
+Width <- imports_85[,12]
+
+Height <- imports_85[,13]
+
+Weight <- imports_85[,14]
+
+EngineType <- imports_85[,15]
+
+NumCly <- imports_85[,16]
+
+EngineSize <- imports_85[,17]
+
+FuelSystem <- imports_85[,18]
+
+Bore <- imports_85[,19]
+
+Stroke <- imports_85[,20]
+
+CompressionRatio <- imports_85[,21]
+
+Horsepower <- imports_85[,22]
+
+PeakRpm <- imports_85[,23]
+
+CityMpg <- imports_85[,24]
+
+HighwayMpg <- imports_85[,25]
+
+Price <- imports_85[,26]
+@
+
+
+\begin{center}
+\bf{Introduction}
+\end{center}
+
+\end{document}
