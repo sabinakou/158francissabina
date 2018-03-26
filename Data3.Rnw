@@ -90,4 +90,6 @@ Price <- imports_85[,26]
 \bf{Introduction}
 \end{center}
 
-In this data set, we are analyzing the features of cars and the subsequent 
+In this data set, we are analyzing the features of cars and how those variables affect the price of the cars specifically listed in our data set. With a wide range of variables in this data set, and data from the 1985 Model Import Car and Truck Specification, we can start to explore the relationships between price and car features. The data was retrieved from: $https://archive.ics.uci.edu/ml/machine-learning-databases/autos/$ . We acknowledge that this data does not represent all cars but it does represent a list of imported cars in the United States, so this information can  be carefully extrapolated to represent more cars. Correlations between price and feature should not differ too much between imported cars and non-imported cars. 
+
+\end{document}
